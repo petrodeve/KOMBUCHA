@@ -1,3 +1,4 @@
+#test
 """
 Django settings for KOMBUCHA project.
 
