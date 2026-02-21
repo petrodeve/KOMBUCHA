@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ product_desc.name }}</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 24px;
+    }
+
+    .back {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #555;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    /* ===== GALLERY ===== */
+    .gallery {
+      display: flex;
+      gap: 16px;
+    }
+
+    .thumbs {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .thumb {
+      width: 70px;
+      height: 120px;
+      object-fit: contain;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      cursor: pointer;
+      padding: 4px;
+      background: #fff;
+    }
+
+    .thumb.active {
+      border: 2px solid #0a7c4a;
+    }
+
+    .main-image img {
+      width: 100%;
+      max-height: 420px;
+      object-fit: contain;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    /* ===== INFO ===== */
+    h1 {
+      margin-top: 0;
+    }
+
+    .flavor {
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .price {
+      font-size: 22px;
+      font-weight: bold;
+      margin: 12px 0;
+    }
+
+    .stock {
+      color: #0a7c4a;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .description {
+      margin: 20px 0;
+      line-height: 1.6;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #0a7c4a;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .btn:hover {
+      background: #08653d;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery {
+        flex-direction: column-reverse;
+      }
+
+      .thumbs {
+        flex-direction: row;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<a href="/" class="back">← Назад до каталогу</a>
+
+<div class="container">
+
+  <!-- LEFT: IMAGES -->
+  <div class="gallery">
+
+    <div class="thumbs">
+      <!-- main image thumb -->
+      <img class="thumb active"
+           src="{{ product_desc.main_image.url }}"
+           data-full="{{ product_desc.main_image.url }}"
+           alt="{{ product_desc.name }}">
+
+      {% for img in product_desc.images.all %}
+        <img class="thumb"
+             src="{{ img.image.url }}"
+             data-full="{{ img.image.url }}"
+             alt="{{ product_desc.name }}">
+      {% endfor %}
+    </div>
+
+    <div class="main-image">
+      <img id="mainPhoto"
+           src="{{ product_desc.main_image.url }}"
+           alt="{{ product_desc.name }}">
+    </div>
+
+  </div>
+
+  <!-- RIGHT: INFO -->
+  <div>
+    <h1>{{ product_desc.name }}</h1>
+
+    <div class="flavor">Смак: {{ product_desc.flavor }}</div>
+
+    <div class="price">{{ product_desc.price }} грн</div>
+
+    <div class="stock">✔ {{ product_desc.stock_message }}</div>
+
+    <div class="description">
+      {{ product_desc.description|linebreaks }}
+    </div>
+
+    <a href="#" class="btn">Додати в кошик</a>
+  </div>
+
+</div>
+
+<!-- ===== JS ===== -->
+<script>
+  const mainPhoto = document.getElementById('mainPhoto');
+  const thumbs = document.querySelectorAll('.thumb');
+
+  thumbs.forEach((thumb) => {
+    thumb.addEventListener('click', () => {
+      mainPhoto.src = thumb.dataset.full;
+
+      thumbs.forEach(t => t.classList.remove('active'));
+      thumb.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>

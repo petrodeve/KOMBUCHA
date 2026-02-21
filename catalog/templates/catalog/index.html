@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Каталог комбухи</title>
+
+  <!-- optional: modern font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: rgba(15, 23, 42, .10);
+      --shadow: 0 10px 24px rgba(15, 23, 42, .08);
+      --shadow-hover: 0 16px 40px rgba(15, 23, 42, .12);
+      --green: #0a7c4a;
+      --green-hover: #08653d;
+      --radius: 18px;
+    }
+
+    *{ box-sizing: border-box; }
+    html, body{ height: 100%; }
+    body{
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 600px at 50% -10%, rgba(10,124,74,.10), transparent 60%),
+                  var(--bg);
+      color: var(--text);
+    }
+
+    a{ color: inherit; }
+    .container{
+      width: min(1240px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+    .header{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(246,247,249,.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner{
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 0;
+    }
+    .brand{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+    .brand-badge{
+      width: 36px; height: 36px;
+      border-radius: 12px;
+      background: rgba(10,124,74,.12);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      color: var(--green);
+    }
+    .nav{
+      display: none;
+      gap: 14px;
+      margin-left: 6px;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .nav a{ text-decoration: none; }
+    .nav a:hover{ color: var(--text); }
+
+    .search{
+      flex: 1;
+      display: flex;
+      gap: 10px;
+      margin-left: auto;
+    }
+    .search input{
+      width: 100%;
+      height: 42px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 0 14px;
+      outline: none;
+      background: #fff;
+      font-size: 14px;
+    }
+    .search input:focus{
+      border-color: rgba(10,124,74,.35);
+      box-shadow: 0 0 0 4px rgba(10,124,74,.12);
+    }
+
+    .header-actions{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .icon-btn{
+      height: 42px;
+      padding: 0 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+    .icon-dot{
+      width: 8px; height: 8px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 0 4px rgba(10,124,74,.12);
+    }
+
+    /* HERO */
+    .hero{
+      padding: 28px 0 18px;
+    }
+    .hero-grid{
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .hero-card{
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.75);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+    .hero-title{
+      margin: 0 0 10px;
+      font-size: clamp(28px, 3vw, 42px);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      font-weight: 900;
+    }
+    .hero-sub{
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
+      max-width: 58ch;
+    }
+    .hero-cta{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .btn{
+      height: 44px;
+      padding: 0 14px;
+      border-radius: 14px;
+      font-weight: 900;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: transform .06s ease, background .15s ease, border-color .15s ease;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn-primary{
+      background: var(--green);
+      color: #fff;
+    }
+    .btn-primary:hover{ background: var(--green-hover); }
+    .btn-ghost{
+      background: #fff;
+      border-color: var(--border);
+      color: var(--text);
+    }
+    .btn-ghost:hover{ border-color: rgba(15,23,42,.18); }
+
+    .hero-side{
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.95));
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+      align-content: center;
+    }
+    .trust{
+      display: grid;
+      gap: 10px;
+    }
+    .trust-item{
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+    .trust-ic{
+      width: 36px; height: 36px;
+      border-radius: 14px;
+      background: rgba(10,124,74,.12);
+      display: grid;
+      place-items: center;
+      color: var(--green);
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+    .trust-text b{ display:block; font-size: 14px; }
+    .trust-text span{ color: var(--muted); font-size: 13px; }
+
+    /* SECTION HEADER */
+    .section-head{
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 18px 0 12px;
+    }
+    .section-head h2{
+      margin: 0;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    /* FILTER BAR (UI only) */
+    .filters{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.75);
+      border-radius: 18px;
+      padding: 12px;
+      box-shadow: 0 1px 0 rgba(15,23,42,.02);
+    }
+    .chips{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip{
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 12px;
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+    }
+    .chip:hover{ color: var(--text); border-color: rgba(15,23,42,.18); }
+    .controls{
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .select{
+      height: 38px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 0 10px;
+      background: #fff;
+      font-weight: 700;
+      color: var(--muted);
+      outline: none;
+    }
+
+    /* GRID + CARD */
+    .product-grid{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin: 14px 0 32px;
+    }
+    .product-card{
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      overflow: hidden;
+      box-shadow: 0 1px 0 rgba(15,23,42,.02);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+      display: flex;
+      flex-direction: column;
+      min-height: 420px;
+    }
+    .product-card:hover{
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(15, 23, 42, .16);
+    }
+
+    .product-link{
+      display: block;
+      text-decoration: none;
+    }
+    .product-media{
+      position: relative;
+      background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+      padding: 16px;
+      display: grid;
+      place-items: center;
+      aspect-ratio: 4 / 5;
+    }
+    .product-image{
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.10));
+      transition: transform .2s ease, filter .2s ease;
+    }
+    .product-overlay{
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(15,23,42,.72);
+      color: #fff;
+      font-weight: 900;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity .2s ease, transform .2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-align: center;
+      backdrop-filter: blur(6px);
+    }
+    .product-card:hover .product-image{
+      transform: scale(1.06);
+      filter: brightness(.92) drop-shadow(0 12px 22px rgba(0,0,0,.12));
+    }
+    .product-card:hover .product-overlay{
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .product-content{
+      padding: 14px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+    .product-title{
+      margin: 0;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+    }
+    .product-meta{
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .product-price{
+      margin: 0;
+      font-size: 16px;
+      font-weight: 900;
+    }
+    .badge{
+      font-size: 12px;
+      font-weight: 900;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(10,124,74,.25);
+      background: rgba(10,124,74,.08);
+      color: var(--green);
+      white-space: nowrap;
+    }
+    .badge--off{
+      border-color: rgba(239,68,68,.25);
+      background: rgba(239,68,68,.08);
+      color: #ef4444;
+    }
+
+    .product-desc{
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+      min-height: 34px;
+    }
+
+    .product-actions{
+      margin-top: auto;
+    }
+    .product-btn{
+      width: 100%;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--green);
+      color: #fff;
+      font-weight: 900;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .15s ease, transform .06s ease;
+    }
+    .product-btn:hover{ background: var(--green-hover); }
+    .product-btn:active{ transform: translateY(1px); }
+    .product-btn:focus-visible{
+      outline: 3px solid rgba(34, 197, 94, .35);
+      outline-offset: 2px;
+    }
+
+    .empty{
+      text-align: center;
+      color: var(--muted);
+      padding: 40px 0;
+      border: 1px dashed rgba(15,23,42,.18);
+      border-radius: 18px;
+      background: rgba(255,255,255,.7);
+    }
+
+    /* FOOTER */
+    .footer{
+      border-top: 1px solid var(--border);
+      background: rgba(255,255,255,.7);
+      padding: 22px 0;
+      color: var(--muted);
+      margin-top: 30px;
+    }
+    .footer-grid{
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 16px;
+    }
+    .footer h4{ margin: 0 0 10px; color: var(--text); }
+    .footer a{ text-decoration: none; color: var(--muted); }
+    .footer a:hover{ color: var(--text); }
+
+    /* RESPONSIVE */
+    @media (min-width: 900px){
+      .nav{ display: flex; }
+    }
+    @media (max-width: 900px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .header-actions span{ display: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container">
+    <div class="header-inner">
+      <a class="brand" href="/">
+        <span class="brand-badge">K</span>
+        <span>VK DRINKS</span>
+      </a>
+
+      <nav class="nav" aria-label="Навігація">
+        <a href="#">Каталог</a>
+        <a href="#">Доставка</a>
+        <a href="#">Про нас</a>
+        <a href="#">Контакти</a>
+      </nav>
+
+      <div class="search" role="search">
+        <input type="search" placeholder="Пошук смаку: імбир, манго..." aria-label="Пошук">
+      </div>
+
+      <div class="header-actions">
+        <a class="icon-btn" href="#">
+          <span class="icon-dot"></span>
+          <span>Кошик</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="hero-card">
+        <h1 class="hero-title">Жива комбуча з натуральними смаками</h1>
+        <p class="hero-sub">
+          Свіжа ферментація, чистий склад, приємна газованість.
+          Обери смак — і ми доставимо швидко.
+        </p>
+
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#catalog">Перейти в каталог</a>
+          <a class="btn btn-ghost" href="#how">Як це працює</a>
+        </div>
+      </div>
+
+      <aside class="hero-side">
+        <div class="trust">
+          <div class="trust-item">
+            <div class="trust-ic">✓</div>
+            <div class="trust-text">
+              <b>Натуральні інгредієнти</b>
+              <span>Без “хімії”, чистий смак</span>
+            </div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-ic">⚡</div>
+            <div class="trust-text">
+              <b>Швидка доставка</b>
+              <span>Зручно та без зайвих дзвінків</span>
+            </div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-ic">❄</div>
+            <div class="trust-text">
+              <b>Смачно охолоджено</b>
+              <span>Рекомендація: 4–6°C</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- FILTERS (UI) -->
+  <div class="section-head">
+    <h2 id="catalog">Каталог</h2>
+  </div>
+
+  <section class="filters" aria-label="Фільтри каталогу">
+    <div class="chips" aria-label="Швидкі категорії">
+      <div class="chip">Хіти</div>
+      <div class="chip">Новинки</div>
+      <div class="chip">Імбир</div>
+      <div class="chip">Фрукти</div>
+      <div class="chip">Трави</div>
+      <div class="chip">Тільки доступні</div>
+    </div>
+
+    <div class="controls">
+      <select class="select" aria-label="Сортування">
+        <option>Популярні</option>
+        <option>Нові</option>
+        <option>Ціна: зростання</option>
+        <option>Ціна: спадання</option>
+      </select>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section>
+    <div class="product-grid">
+      {% for product in products %}
+        <article class="product-card">
+
+          <a class="product-link" href="{% url 'product_detail' product.slug %}">
+            <div class="product-media">
+              <img class="product-image"
+                   src="{{ product.main_image.url }}"
+                   alt="{{ product.name }}">
+              <span class="product-overlay">Переглянути товар →</span>
+            </div>
+          </a>
+
+          <div class="product-content">
+            <h3 class="product-title">{{ product.flavor }}</h3>
+
+            <div class="product-meta">
+              <p class="product-price">{{ product.price }} CZK</p>
+
+              {# якщо у тебе є boolean availability — підключиш #}
+              <span class="badge">✔ {{ product.stock_message }}</span>
+            </div>
+
+            <p class="product-desc">
+              330 мл • освіжаюча ферментація • смак: {{ product.flavor }}
+            </p>
+
+            <div class="product-actions">
+              <a href="{% url 'product_detail' product.pk %}" class="product-btn">
+                Додати в кошик
+              </a>
+            </div>
+          </div>
+
+        </article>
+      {% empty %}
+        <div class="empty">Товарів поки немає</div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" class="hero" style="padding-top:0;">
+    <div class="section-head">
+      <h2>Як пити</h2>
+    </div>
+
+    <div class="product-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+      <div class="hero-side" style="box-shadow:none;">
+        <div class="trust-item">
+          <div class="trust-ic">1</div>
+          <div class="trust-text"><b>Охолоди</b><span>Найкраще 4–6°C</span></div>
+        </div>
+      </div>
+      <div class="hero-side" style="box-shadow:none;">
+        <div class="trust-item">
+          <div class="trust-ic">2</div>
+          <div class="trust-text"><b>Відкрий обережно</b><span>Газована ферментація</span></div>
+        </div>
+      </div>
+      <div class="hero-side" style="box-shadow:none;">
+        <div class="trust-item">
+          <div class="trust-ic">3</div>
+          <div class="trust-text"><b>Насолоджуйся</b><span>Спробуй різні смаки</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>VK DRINKS</h4>
+        <div>Жива комбуча з натуральними смаками.</div>
+      </div>
+      <div>
+        <h4>Покупцям</h4>
+        <div><a href="#">Доставка та оплата</a></div>
+        <div><a href="#">Повернення</a></div>
+      </div>
+      <div>
+        <h4>Контакти</h4>
+        <div><a href="#">Instagram</a></div>
+        <div><a href="#">Telegram</a></div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

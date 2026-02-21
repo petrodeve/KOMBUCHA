@@ -14,6 +14,7 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
 
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
@@ -22,10 +23,10 @@ class Product(models.Model):
     @property
     def stock_message(self):
         if self.stock == 0:
-            return "Not available"
+            return "Розпродано"
         if self.stock < 10:
-            return f"Remaining {self.stock} pc."
-        return "Available"
+            return f"Залишилося {self.stock} шт."
+        return "Доступно"
 
     def __str__(self):
         return self.name
