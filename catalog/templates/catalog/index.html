@@ -581,7 +581,7 @@
       {% for product in products %}
         <article class="product-card">
 
-          <a class="product-link" href="{% url 'product_detail' product.slug %}">
+          <a class="product-link" href="{% url 'catalog:product_detail' slug=product.slug %}">
             <div class="product-media">
               <img class="product-image"
                    src="{{ product.main_image.url }}"
@@ -605,7 +605,7 @@
             </p>
 
             <div class="product-actions">
-              <a href="{% url 'product_detail' product.pk %}" class="product-btn">
+              <a href="{% url 'catalog:product_detail' product.pk %}" class="product-btn">
                 Додати в кошик
               </a>
             </div>
