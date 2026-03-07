@@ -1,10 +1,96 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="cart-summary">
+  <div class="cart-summary__rows">
+    <div class="cart-summary__row">
+      <span>Товарів</span>
+      <strong>{{ cart.total_items }}</strong>
+    </div>
 
-</body>
-</html>
+    <div class="cart-summary__row cart-summary__row--total">
+      <span>Разом</span>
+      <strong>{{ cart.subtotal }} CZK</strong>
+    </div>
+  </div>
+
+  <div class="cart-summary__actions">
+    <button
+      class="cart-summary__clear"
+      hx-post="{% url 'cart:clear_cart' %}"
+      hx-target="#modal-root"
+      hx-swap="innerHTML"
+      type="button">
+      Очистити кошик
+    </button>
+
+    <a href="#" class="cart-summary__checkout">
+      Оформити
+    </a>
+  </div>
+</div>
+
+<style>
+  .cart-summary{
+    display: grid;
+    gap: 16px;
+  }
+
+  .cart-summary__rows{
+    display: grid;
+    gap: 10px;
+  }
+
+  .cart-summary__row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+  }
+
+  .cart-summary__row span{
+    color: var(--muted);
+  }
+
+  .cart-summary__row strong{
+    font-weight: 900;
+  }
+
+  .cart-summary__row--total{
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    font-size: 18px;
+  }
+
+  .cart-summary__actions{
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .cart-summary__clear{
+    height: 44px;
+    padding: 0 14px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: #fff;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .cart-summary__checkout{
+    height: 44px;
+    padding: 0 18px;
+    border-radius: 14px;
+    background: var(--green);
+    color: #fff;
+    font-weight: 900;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cart-summary__checkout:hover{
+    background: var(--green-hover);
+  }
+</style>

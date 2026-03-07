@@ -5,10 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ product_desc.name }}</title>
 
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+
   <style>
+    :root{
+      --bg: #f6f7f9;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: rgba(15, 23, 42, .10);
+      --shadow: 0 10px 24px rgba(15, 23, 42, .08);
+      --green: #0a7c4a;
+      --green-hover: #08653d;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-      font-family: Arial, sans-serif;
-      margin: 24px;
+      font-family: Inter, Arial, sans-serif;
+      margin: 0;
+      padding: 24px;
+      background: radial-gradient(1200px 600px at 50% -10%, rgba(10,124,74,.10), transparent 60%), var(--bg);
+      color: var(--text);
     }
 
     .back {
@@ -16,6 +34,7 @@
       margin-bottom: 20px;
       color: #555;
       text-decoration: none;
+      font-weight: 600;
     }
 
     .container {
@@ -24,9 +43,9 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 40px;
+      align-items: start;
     }
 
-    /* ===== GALLERY ===== */
     .gallery {
       display: flex;
       gap: 16px;
@@ -42,68 +61,162 @@
       width: 70px;
       height: 120px;
       object-fit: contain;
-      border: 1px solid #ddd;
-      border-radius: 6px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
       cursor: pointer;
-      padding: 4px;
+      padding: 6px;
       background: #fff;
+      transition: .2s ease;
     }
 
     .thumb.active {
-      border: 2px solid #0a7c4a;
+      border: 2px solid var(--green);
+    }
+
+    .main-image {
+      flex: 1;
     }
 
     .main-image img {
       width: 100%;
-      max-height: 420px;
+      max-height: 500px;
       object-fit: contain;
-      border: 1px solid #eee;
-      border-radius: 12px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
       background: #fff;
+      box-shadow: var(--shadow);
+      padding: 18px;
     }
 
-    /* ===== INFO ===== */
+    .info-card{
+      background: rgba(255,255,255,.82);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
     h1 {
       margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 48px;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
     }
 
     .flavor {
-      color: #666;
-      margin-bottom: 10px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      font-size: 20px;
     }
 
     .price {
-      font-size: 22px;
-      font-weight: bold;
-      margin: 12px 0;
+      font-size: 36px;
+      font-weight: 900;
+      margin: 16px 0;
     }
 
     .stock {
-      color: #0a7c4a;
-      margin-bottom: 16px;
-      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      font-weight: 800;
+      color: var(--green);
+      background: rgba(10,124,74,.08);
+      border: 1px solid rgba(10,124,74,.20);
+      border-radius: 999px;
+      padding: 8px 12px;
+    }
+
+    .stock--off{
+      color: #ef4444;
+      background: rgba(239,68,68,.08);
+      border-color: rgba(239,68,68,.20);
     }
 
     .description {
-      margin: 20px 0;
-      line-height: 1.6;
+      margin: 20px 0 24px;
+      line-height: 1.7;
+      color: #334155;
+    }
+
+    .buy-row{
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .qty-input{
+      width: 90px;
+      height: 48px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0 12px;
+      font-size: 16px;
+      font-weight: 700;
+      background: #fff;
+      outline: none;
+    }
+
+    .qty-input:focus{
+      border-color: rgba(10,124,74,.35);
+      box-shadow: 0 0 0 4px rgba(10,124,74,.12);
     }
 
     .btn {
-      display: inline-block;
-      padding: 12px 24px;
-      background: #0a7c4a;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 24px;
+      height: 48px;
+      background: var(--green);
       color: #fff;
       text-decoration: none;
-      border-radius: 8px;
-      font-weight: 600;
+      border-radius: 12px;
+      font-weight: 800;
+      border: 0;
+      cursor: pointer;
+      transition: .15s ease;
     }
 
     .btn:hover {
-      background: #08653d;
+      background: var(--green-hover);
+    }
+
+    .btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .toast{
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: #0f172a;
+      color: #fff;
+      padding: 14px 18px;
+      border-radius: 14px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.18);
+      font-weight: 700;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: .25s ease;
+      z-index: 10001;
+    }
+
+    .toast.show{
+      opacity: 1;
+      transform: translateY(0);
     }
 
     @media (max-width: 768px) {
+      body{
+        padding: 16px;
+      }
+
       .container {
         grid-template-columns: 1fr;
       }
@@ -116,21 +229,26 @@
         flex-direction: row;
         justify-content: center;
       }
+
+      h1{
+        font-size: 36px;
+      }
+
+      .price{
+        font-size: 28px;
+      }
     }
   </style>
 </head>
 
-<body>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
-<a href="/" class="back">← Назад до каталогу</a>
+<a href="{% url 'catalog:catalog' %}" class="back">← Назад до каталогу</a>
 
 <div class="container">
 
-  <!-- LEFT: IMAGES -->
   <div class="gallery">
-
     <div class="thumbs">
-      <!-- main image thumb -->
       <img class="thumb active"
            src="{{ product_desc.main_image.url }}"
            data-full="{{ product_desc.main_image.url }}"
@@ -149,29 +267,61 @@
            src="{{ product_desc.main_image.url }}"
            alt="{{ product_desc.name }}">
     </div>
-
   </div>
 
-  <!-- RIGHT: INFO -->
-  <div>
+  <div class="info-card">
     <h1>{{ product_desc.name }}</h1>
 
     <div class="flavor">Смак: {{ product_desc.flavor }}</div>
 
     <div class="price">{{ product_desc.price }} грн</div>
 
-    <div class="stock">✔ {{ product_desc.stock_message }}</div>
+    {% if product_desc.stock > 0 %}
+      <div class="stock">✔ Доступно</div>
+    {% else %}
+      <div class="stock stock--off">✕ Немає в наявності</div>
+    {% endif %}
 
     <div class="description">
       {{ product_desc.description|linebreaks }}
     </div>
 
-    <a href="#" class="btn">Додати в кошик</a>
+    {% if product_desc.stock > 0 %}
+      <form
+        class="buy-row"
+        hx-post="{% url 'cart:add_to_cart' slug=product_desc.slug %}"
+        hx-target="#modal-root"
+        hx-swap="innerHTML"
+        hx-on::after-request="showToast('Товар додано в кошик')"
+      >
+        {% csrf_token %}
+
+        <input
+          class="qty-input"
+          type="number"
+          name="quantity"
+          value="1"
+          min="1"
+          max="{{ product_desc.stock }}"
+        >
+
+        <button type="submit" class="btn">
+          Додати в кошик
+        </button>
+      </form>
+    {% else %}
+      <button class="btn" disabled>
+        Немає в наявності
+      </button>
+    {% endif %}
   </div>
 
 </div>
 
-<!-- ===== JS ===== -->
+<div id="modal-root"></div>
+
+<div id="toast" class="toast"></div>
+
 <script>
   const mainPhoto = document.getElementById('mainPhoto');
   const thumbs = document.querySelectorAll('.thumb');
@@ -179,10 +329,48 @@
   thumbs.forEach((thumb) => {
     thumb.addEventListener('click', () => {
       mainPhoto.src = thumb.dataset.full;
-
       thumbs.forEach(t => t.classList.remove('active'));
       thumb.classList.add('active');
     });
+  });
+
+  function showToast(message) {
+    const toast = document.getElementById('toast');
+    if (!toast) return;
+
+    toast.textContent = message;
+    toast.classList.add('show');
+
+    clearTimeout(window.__toastTimer);
+    window.__toastTimer = setTimeout(() => {
+      toast.classList.remove('show');
+    }, 1800);
+  }
+
+  async function refreshCartCount() {
+    try {
+      const response = await fetch("{% url 'cart:cart_count' %}", {
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+      });
+
+      if (!response.ok) return;
+
+      const data = await response.json();
+      const badge = document.getElementById("cart-count-badge");
+
+      if (badge) {
+        badge.textContent = data.total_items;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  document.body.addEventListener("htmx:afterRequest", function (event) {
+    const path = event.detail.pathInfo.requestPath;
+    if (path.startsWith("/cart/")) {
+      refreshCartCount();
+    }
   });
 </script>
 

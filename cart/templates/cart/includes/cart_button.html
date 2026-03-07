@@ -1,0 +1,28 @@
+{% load cart_tags %}
+
+<a class="icon-btn"
+   href="{% url 'cart:cart_modal' %}"
+   hx-get="{% url 'cart:cart_modal' %}"
+   hx-target="#modal-root"
+   hx-swap="innerHTML">
+  <span class="icon-dot"></span>
+  <span>Кошик</span>
+  {% get_cart_count as cart_count %}
+  <span class="cart-button__count">{{ cart_count }}</span>
+</a>
+
+<style>
+  .cart-button__count{
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10,124,74,.12);
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 900;
+  }
+</style>

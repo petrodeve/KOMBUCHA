@@ -1,10 +1,164 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% load cart_tags %}
 
-</body>
-</html>
+<div id="cart-modal" class="cart-modal" role="dialog" aria-modal="true">
+  <div class="cart-modal__backdrop" data-cart-close></div>
+
+  <div class="cart-modal__dialog">
+    <div class="cart-modal__header">
+      <div>
+        <h3 class="cart-modal__title">Кошик</h3>
+        <p class="cart-modal__subtitle">
+          {{ cart.total_items }} шт. • {{ cart.subtotal }} CZK
+        </p>
+      </div>
+
+      <button type="button" class="cart-modal__close" data-cart-close>
+        ✕
+      </button>
+    </div>
+
+    <div class="cart-modal__body">
+      {% if cart_items %}
+        <div class="cart-list">
+          {% for item in cart_items %}
+            {% include "cart/cart_item.html" with item=item %}
+          {% endfor %}
+        </div>
+
+        <div class="cart-modal__footer">
+          {% include "cart/cart_summary.html" %}
+        </div>
+      {% else %}
+        {% include "cart/cart_empty.html" %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .cart-modal{
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  .cart-modal__backdrop{
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, .48);
+    backdrop-filter: blur(4px);
+  }
+
+  .cart-modal__dialog{
+    position: relative;
+    width: min(880px, 100%);
+    max-height: min(88vh, 900px);
+    background: rgba(255,255,255,.96);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    box-shadow: var(--shadow-hover);
+    overflow: hidden;
+    animation: cartFade .18s ease;
+  }
+
+  @keyframes cartFade{
+    from{ opacity: 0; transform: translateY(10px) scale(.98); }
+    to{ opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .cart-modal__header{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,.85);
+    backdrop-filter: blur(8px);
+  }
+
+  .cart-modal__title{
+    margin: 0;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+
+  .cart-modal__subtitle{
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .cart-modal__close{
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 900;
+  }
+
+  .cart-modal__body{
+    padding: 18px 20px 20px;
+    overflow: auto;
+    max-height: calc(min(88vh, 900px) - 84px);
+  }
+
+  .cart-list{
+    display: grid;
+    gap: 14px;
+  }
+
+  .cart-modal__footer{
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 700px){
+    .cart-modal{
+      padding: 0;
+      align-items: flex-end;
+    }
+
+    .cart-modal__dialog{
+      width: 100%;
+      max-height: 92vh;
+      border-radius: 24px 24px 0 0;
+    }
+  }
+</style>
+
+<script>
+(function () {
+  const root = document.getElementById('modal-root');
+  const modal = document.getElementById('cart-modal');
+
+  if (!root || !modal) return;
+
+  function closeCartModal() {
+    root.innerHTML = '';
+  }
+
+  modal.addEventListener('click', function (e) {
+    if (e.target.hasAttribute('data-cart-close')) {
+      closeCartModal();
+    }
+  });
+
+  document.addEventListener('keydown', function escHandler(e) {
+    if (e.key === 'Escape') {
+      closeCartModal();
+      document.removeEventListener('keydown', escHandler);
+    }
+  });
+})();
+</script>

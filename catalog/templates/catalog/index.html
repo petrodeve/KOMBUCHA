@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Каталог комбухи</title>
 
-  <!-- optional: modern font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 
   <style>
     :root{
@@ -29,8 +30,7 @@
     body{
       margin: 0;
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: radial-gradient(1200px 600px at 50% -10%, rgba(10,124,74,.10), transparent 60%),
-                  var(--bg);
+      background: radial-gradient(1200px 600px at 50% -10%, rgba(10,124,74,.10), transparent 60%), var(--bg);
       color: var(--text);
     }
 
@@ -40,7 +40,6 @@
       margin: 0 auto;
     }
 
-    /* HEADER */
     .header{
       position: sticky;
       top: 0;
@@ -130,7 +129,6 @@
       box-shadow: 0 0 0 4px rgba(10,124,74,.12);
     }
 
-    /* HERO */
     .hero{
       padding: 28px 0 18px;
     }
@@ -231,7 +229,6 @@
     .trust-text b{ display:block; font-size: 14px; }
     .trust-text span{ color: var(--muted); font-size: 13px; }
 
-    /* SECTION HEADER */
     .section-head{
       display: flex;
       align-items: flex-end;
@@ -246,7 +243,6 @@
       letter-spacing: -0.02em;
     }
 
-    /* FILTER BAR (UI only) */
     .filters{
       display: flex;
       flex-wrap: wrap;
@@ -292,7 +288,6 @@
       outline: none;
     }
 
-    /* GRID + CARD */
     .product-grid{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -427,6 +422,8 @@
       align-items: center;
       justify-content: center;
       transition: background .15s ease, transform .06s ease;
+      border: 0;
+      cursor: pointer;
     }
     .product-btn:hover{ background: var(--green-hover); }
     .product-btn:active{ transform: translateY(1px); }
@@ -444,7 +441,6 @@
       background: rgba(255,255,255,.7);
     }
 
-    /* FOOTER */
     .footer{
       border-top: 1px solid var(--border);
       background: rgba(255,255,255,.7);
@@ -461,7 +457,6 @@
     .footer a{ text-decoration: none; color: var(--muted); }
     .footer a:hover{ color: var(--text); }
 
-    /* RESPONSIVE */
     @media (min-width: 900px){
       .nav{ display: flex; }
     }
@@ -472,9 +467,8 @@
   </style>
 </head>
 
-<body>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
-<!-- HEADER -->
 <header class="header">
   <div class="container">
     <div class="header-inner">
@@ -495,10 +489,7 @@
       </div>
 
       <div class="header-actions">
-        <a class="icon-btn" href="#">
-          <span class="icon-dot"></span>
-          <span>Кошик</span>
-        </a>
+        {% include "cart/includes/cart_button.html" %}
       </div>
     </div>
   </div>
@@ -506,7 +497,6 @@
 
 <main class="container">
 
-  <!-- HERO -->
   <section class="hero">
     <div class="hero-grid">
       <div class="hero-card">
@@ -550,7 +540,6 @@
     </div>
   </section>
 
-  <!-- FILTERS (UI) -->
   <div class="section-head">
     <h2 id="catalog">Каталог</h2>
   </div>
@@ -575,7 +564,6 @@
     </div>
   </section>
 
-  <!-- PRODUCTS -->
   <section>
     <div class="product-grid">
       {% for product in products %}
@@ -596,19 +584,29 @@
             <div class="product-meta">
               <p class="product-price">{{ product.price }} CZK</p>
 
-              {# якщо у тебе є boolean availability — підключиш #}
-              <span class="badge">✔ {{ product.stock_message }}</span>
+              {% if product.stock > 0 %}
+                <span class="badge">✔ Доступно</span>
+              {% else %}
+                <span class="badge badge--off">✕ Немає</span>
+              {% endif %}
             </div>
 
             <p class="product-desc">
               330 мл • освіжаюча ферментація • смак: {{ product.flavor }}
             </p>
 
-            <div class="product-actions">
-              <a href="{% url 'catalog:product_detail' product.pk %}" class="product-btn">
+            <form
+              hx-post="{% url 'cart:add_to_cart' slug=product.slug %}"
+              hx-target="#modal-root"
+              hx-swap="innerHTML"
+              class="product-actions"
+            >
+              {% csrf_token %}
+              <input type="hidden" name="quantity" value="1">
+              <button type="submit" class="product-btn">
                 Додати в кошик
-              </a>
-            </div>
+              </button>
+            </form>
           </div>
 
         </article>
@@ -618,7 +616,6 @@
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
   <section id="how" class="hero" style="padding-top:0;">
     <div class="section-head">
       <h2>Як пити</h2>
@@ -648,7 +645,6 @@
 
 </main>
 
-<!-- FOOTER -->
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
@@ -669,6 +665,8 @@
     </div>
   </div>
 </footer>
+
+<div id="modal-root"></div>
 
 </body>
 </html>
