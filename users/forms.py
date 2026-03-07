@@ -86,6 +86,7 @@ class CustomUserUpdateForm(forms.ModelForm):
     )
 
 
+
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email', 'company',
@@ -112,3 +113,5 @@ class CustomUserUpdateForm(forms.ModelForm):
         cleaned_data = super().clean()
         if not cleaned_data.get('email'):
             cleaned_data['email'] = self.instance.email
+        return cleaned_data
+

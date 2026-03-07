@@ -1,0 +1,113 @@
+<form
+  hx-post="{% url 'users:update_account_details' %}"
+  hx-target="#account-details"
+  hx-swap="innerHTML"
+  method="post">
+  {% csrf_token %}
+
+  {% if form.non_field_errors %}
+    <div class="form-errors">
+      {% for error in form.non_field_errors %}
+        <div>{{ error }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="form-grid">
+    {% for field in form %}
+      <div class="field">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <div class="field-errors">{{ field.errors }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="actions">
+    <button type="submit" class="save-btn">Зберегти</button>
+    <button
+      type="button"
+      class="cancel-btn"
+      hx-get="{% url 'users:account_details' %}"
+      hx-target="#account-details"
+      hx-swap="innerHTML">
+      Скасувати
+    </button>
+  </div>
+</form>
+
+<style>
+  .form-grid{
+    display:grid;
+    gap:14px;
+  }
+
+  .field label{
+    display:block;
+    margin-bottom:6px;
+    font-size:13px;
+    font-weight:800;
+    color:#0f172a;
+  }
+
+  .field input{
+    width:100%;
+    height:46px;
+    border:1px solid rgba(15,23,42,.10);
+    border-radius:14px;
+    padding:0 14px;
+    outline:none;
+    background:#fff;
+  }
+
+  .field input:focus{
+    border-color:rgba(10,124,74,.35);
+    box-shadow:0 0 0 4px rgba(10,124,74,.10);
+  }
+
+  .field-errors{
+    margin-top:6px;
+    font-size:13px;
+    color:#dc2626;
+    font-weight:700;
+  }
+
+  .form-errors{
+    margin-bottom:14px;
+    padding:12px 14px;
+    border-radius:14px;
+    background:rgba(239,68,68,.08);
+    color:#b91c1c;
+    font-weight:700;
+  }
+
+  .actions{
+    display:flex;
+    gap:10px;
+    margin-top:18px;
+    flex-wrap:wrap;
+  }
+
+  .save-btn,
+  .cancel-btn{
+    height:44px;
+    padding:0 16px;
+    border-radius:14px;
+    font-weight:800;
+    cursor:pointer;
+  }
+
+  .save-btn{
+    border:0;
+    background:#0a7c4a;
+    color:#fff;
+  }
+
+  .cancel-btn{
+    border:1px solid rgba(15,23,42,.10);
+    background:#fff;
+    color:#0f172a;
+  }
+</style>

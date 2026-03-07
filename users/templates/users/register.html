@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Реєстрація</title>
+  <style>
+    :root{
+      --bg:#f6f7f9;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:rgba(15,23,42,.10);
+      --shadow:0 10px 24px rgba(15,23,42,.08);
+      --green:#0a7c4a;
+      --green-hover:#08653d;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,Arial,sans-serif;
+      background:radial-gradient(1200px 600px at 50% -10%, rgba(10,124,74,.10), transparent 60%), var(--bg);
+      color:var(--text);
+    }
+
+    .wrap{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:24px;
+    }
+
+    .card{
+      width:min(100%, 520px);
+      background:rgba(255,255,255,.92);
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:28px;
+      box-shadow:var(--shadow);
+    }
+
+    .title{
+      margin:0 0 8px;
+      font-size:34px;
+      font-weight:900;
+      letter-spacing:-.03em;
+    }
+
+    .sub{
+      margin:0 0 22px;
+      color:var(--muted);
+    }
+
+    .grid{
+      display:grid;
+      gap:14px;
+    }
+
+    .field label{
+      display:block;
+      font-size:13px;
+      font-weight:800;
+      margin-bottom:6px;
+    }
+
+    .field input{
+      width:100%;
+      height:48px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:0 14px;
+      background:#fff;
+      outline:none;
+      font-size:15px;
+    }
+
+    .field input:focus{
+      border-color:rgba(10,124,74,.35);
+      box-shadow:0 0 0 4px rgba(10,124,74,.10);
+    }
+
+    .errors{
+      margin-top:6px;
+      color:#dc2626;
+      font-size:13px;
+      font-weight:700;
+    }
+
+    .non-field{
+      margin-bottom:14px;
+      padding:12px 14px;
+      border-radius:14px;
+      background:rgba(239,68,68,.08);
+      color:#b91c1c;
+      font-weight:700;
+      font-size:14px;
+    }
+
+    .btn{
+      width:100%;
+      height:50px;
+      border:0;
+      border-radius:14px;
+      background:var(--green);
+      color:#fff;
+      font-weight:900;
+      font-size:15px;
+      cursor:pointer;
+    }
+
+    .btn:hover{background:var(--green-hover)}
+
+    .footer{
+      margin-top:18px;
+      text-align:center;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .footer a{
+      color:var(--green);
+      text-decoration:none;
+      font-weight:800;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1 class="title">Створити акаунт</h1>
+      <p class="sub">Заповни форму для реєстрації</p>
+
+      {% if form.non_field_errors %}
+        <div class="non-field">
+          {% for error in form.non_field_errors %}
+            <div>{{ error }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="grid">
+          <div class="field">
+            <label for="{{ form.first_name.id_for_label }}">Ім’я</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+              <div class="errors">{{ form.first_name.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="field">
+            <label for="{{ form.last_name.id_for_label }}">Прізвище</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+              <div class="errors">{{ form.last_name.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="field">
+            <label for="{{ form.email.id_for_label }}">Email</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+              <div class="errors">{{ form.email.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="field">
+            <label for="{{ form.password1.id_for_label }}">Пароль</label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+              <div class="errors">{{ form.password1.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="field">
+            <label for="{{ form.password2.id_for_label }}">Підтвердження пароля</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+              <div class="errors">{{ form.password2.errors }}</div>
+            {% endif %}
+          </div>
+
+          <button type="submit" class="btn">Зареєструватися</button>
+        </div>
+      </form>
+
+      <div class="footer">
+        Вже маєш акаунт? <a href="{% url 'users:login' %}">Увійти</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

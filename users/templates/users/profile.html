@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Профіль</title>
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <style>
+    :root{
+      --bg:#f6f7f9;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:rgba(15,23,42,.10);
+      --shadow:0 10px 24px rgba(15,23,42,.08);
+      --green:#0a7c4a;
+      --green-hover:#08653d;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,Arial,sans-serif;
+      background:radial-gradient(1200px 600px at 50% -10%, rgba(10,124,74,.10), transparent 60%), var(--bg);
+      color:var(--text);
+    }
+
+    .container{
+      width:min(1240px, calc(100% - 32px));
+      margin:0 auto;
+      padding:28px 0 40px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:20px;
+      flex-wrap:wrap;
+    }
+
+    .title{
+      margin:0;
+      font-size:40px;
+      font-weight:900;
+      letter-spacing:-.03em;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      height:44px;
+      padding:0 16px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:#fff;
+      color:var(--text);
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .btn--green{
+      background:var(--green);
+      color:#fff;
+      border-color:transparent;
+    }
+
+    .btn--green:hover{
+      background:var(--green-hover);
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:20px;
+    }
+
+    .card{
+      background:rgba(255,255,255,.92);
+      border:1px solid var(--border);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:24px;
+    }
+
+    .card-title{
+      margin:0 0 16px;
+      font-size:22px;
+      font-weight:900;
+    }
+
+    .products{
+      display:grid;
+      gap:12px;
+    }
+
+    .product{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px;
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:#fff;
+    }
+
+    .product img{
+      width:64px;
+      height:64px;
+      object-fit:contain;
+      border-radius:12px;
+      background:#fff;
+      border:1px solid var(--border);
+      padding:6px;
+    }
+
+    .product-name{
+      font-weight:800;
+      margin-bottom:4px;
+    }
+
+    .product-price{
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    @media (max-width: 900px){
+      .layout{
+        grid-template-columns: 1fr;
+      }
+
+      .title{
+        font-size:32px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <h1 class="title">Мій профіль</h1>
+
+      <div class="actions">
+        <a href="{% url 'catalog:catalog' %}" class="btn">На головну</a>
+        <a href="{% url 'users:logout' %}" class="btn btn--green">Вийти</a>
+      </div>
+    </div>
+
+    <div class="layout">
+      <div class="card">
+        <h2 class="card-title">Дані акаунта</h2>
+
+        <div
+          id="account-details"
+          hx-get="{% url 'users:account_details' %}"
+          hx-trigger="load"
+          hx-swap="innerHTML">
+          Завантаження...
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">Рекомендовані товари</h2>
+
+        <div class="products">
+          {% for product in recommended_products %}
+            <a class="product" href="{% url 'catalog:product_detail' slug=product.slug %}" style="text-decoration:none; color:inherit;">
+              {% if product.main_image %}
+                <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
+              {% endif %}
+              <div>
+                <div class="product-name">{{ product.flavor }}</div>
+                <div class="product-price">{{ product.price }} грн</div>
+              </div>
+            </a>
+          {% empty %}
+            <div>Немає товарів</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<div class="account-grid">
+  <div class="row"><span>Ім’я</span><strong>{{ user.first_name|default:"—" }}</strong></div>
+  <div class="row"><span>Прізвище</span><strong>{{ user.last_name|default:"—" }}</strong></div>
+  <div class="row"><span>Email</span><strong>{{ user.email|default:"—" }}</strong></div>
+  <div class="row"><span>Компанія</span><strong>{{ user.company|default:"—" }}</strong></div>
+  <div class="row"><span>Телефон</span><strong>{{ user.phone|default:"—" }}</strong></div>
+  <div class="row"><span>Адреса 1</span><strong>{{ user.address1|default:"—" }}</strong></div>
+  <div class="row"><span>Адреса 2</span><strong>{{ user.address2|default:"—" }}</strong></div>
+  <div class="row"><span>Місто</span><strong>{{ user.city|default:"—" }}</strong></div>
+  <div class="row"><span>Країна</span><strong>{{ user.country|default:"—" }}</strong></div>
+  <div class="row"><span>Область</span><strong>{{ user.province|default:"—" }}</strong></div>
+  <div class="row"><span>Поштовий код</span><strong>{{ user.postal_code|default:"—" }}</strong></div>
+</div>
+
+<div style="margin-top:18px;">
+  <button
+    class="edit-btn"
+    hx-get="{% url 'users:edit_account_details' %}"
+    hx-target="#account-details"
+    hx-swap="innerHTML">
+    Редагувати
+  </button>
+</div>
+
+<style>
+  .account-grid{
+    display:grid;
+    gap:10px;
+  }
+
+  .row{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    padding:12px 14px;
+    border:1px solid rgba(15,23,42,.10);
+    border-radius:14px;
+    background:#fff;
+    flex-wrap:wrap;
+  }
+
+  .row span{
+    color:#64748b;
+    font-weight:700;
+  }
+
+  .row strong{
+    color:#0f172a;
+    font-weight:800;
+  }
+
+  .edit-btn{
+    height:44px;
+    padding:0 16px;
+    border-radius:14px;
+    border:0;
+    background:#0a7c4a;
+    color:#fff;
+    font-weight:800;
+    cursor:pointer;
+  }
+</style>
