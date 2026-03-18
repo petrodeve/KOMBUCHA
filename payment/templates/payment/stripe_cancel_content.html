@@ -1,0 +1,24 @@
+<div class="payment-result">
+
+  <div class="payment-result__icon">
+    ❌
+  </div>
+
+  <h1 class="payment-result__title">
+    Оплату скасовано
+  </h1>
+
+  <p class="payment-result__text">
+    Ви скасували оплату.
+  </p>
+
+  <div class="payment-result__order">
+    Замовлення:
+    <strong>#{{ order.id }}</strong>
+  </div>
+
+  <a href="{% url 'orders:checkout' %}" class="payment-result__btn">
+    Спробувати ще раз
+  </a>
+
+</div>

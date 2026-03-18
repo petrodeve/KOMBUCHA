@@ -1,0 +1,437 @@
+
+<div id="checkout-modal" class="checkout-modal" role="dialog" aria-modal="true">
+  <div class="checkout-modal__backdrop" data-checkout-close></div>
+
+  <div class="checkout-modal__dialog">
+    <div class="checkout-modal__header">
+      <div>
+        <h3 class="checkout-modal__title">Оформлення замовлення</h3>
+        <p class="checkout-modal__subtitle">
+          {{ cart.total_items }} шт. • {{ total_price }} CZK
+        </p>
+      </div>
+
+      <button type="button" class="checkout-modal__close" data-checkout-close>
+        ✕
+      </button>
+    </div>
+
+    <div class="checkout-modal__body">
+      {% if error_message %}
+        <div class="checkout-alert checkout-alert--error">
+          {{ error_message }}
+        </div>
+      {% endif %}
+
+      <div class="checkout-layout">
+        <form
+          class="checkout-form"
+          method="post"
+          action="{% url 'orders:checkout' %}"
+          hx-post="{% url 'orders:checkout' %}"
+          hx-target="#modal-root"
+          hx-swap="innerHTML"
+        >
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="checkout-alert checkout-alert--error">
+              {{ form.non_field_errors }}
+            </div>
+          {% endif %}
+
+          <div class="checkout-form__grid checkout-form__grid--2">
+            <div>
+              {{ form.first_name }}
+              {% if form.first_name.errors %}
+                <div class="field-error">{{ form.first_name.errors|join:", " }}</div>
+              {% endif %}
+            </div>
+
+            <div>
+              {{ form.last_name }}
+              {% if form.last_name.errors %}
+                <div class="field-error">{{ form.last_name.errors|join:", " }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="checkout-form__grid">
+            <div>
+              {{ form.email }}
+              {% if form.email.errors %}
+                <div class="field-error">{{ form.email.errors|join:", " }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="checkout-form__grid">
+            <div>
+              {{ form.company }}
+              {% if form.company.errors %}
+                <div class="field-error">{{ form.company.errors|join:", " }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="checkout-form__grid">
+            <div>
+              {{ form.address1 }}
+              {% if form.address1.errors %}
+                <div class="field-error">{{ form.address1.errors|join:", " }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="checkout-form__grid">
+            <div>
+              {{ form.address2 }}
+              {% if form.address2.errors %}
+                <div class="field-error">{{ form.address2.errors|join:", " }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="checkout-form__grid checkout-form__grid--2">
+            <div>
+              {{ form.city }}
+              {% if form.city.errors %}
+                <div class="field-error">{{ form.city.errors|join:", " }}</div>
+              {% endif %}
+            </div>
+
+            <div>
+              {{ form.country }}
+              {% if form.country.errors %}
+                <div class="field-error">{{ form.country.errors|join:", " }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="checkout-form__grid checkout-form__grid--2">
+            <div>
+              {{ form.province }}
+              {% if form.province.errors %}
+                <div class="field-error">{{ form.province.errors|join:", " }}</div>
+              {% endif %}
+            </div>
+
+            <div>
+              {{ form.postal_code }}
+              {% if form.postal_code.errors %}
+                <div class="field-error">{{ form.postal_code.errors|join:", " }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="checkout-form__grid">
+            <div>
+              {{ form.phone }}
+              {% if form.phone.errors %}
+                <div class="field-error">{{ form.phone.errors|join:", " }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <input type="hidden" name="payment_provider" value="stripe">
+
+          <div class="checkout-payment">
+            <div class="checkout-payment__head">
+              <h4>Оплата</h4>
+              <span>Stripe</span>
+            </div>
+
+            <p class="checkout-payment__text">
+              Після натискання кнопки тебе перекине на безпечну сторінку Stripe для завершення оплати.
+            </p>
+          </div>
+
+          <div class="checkout-actions">
+            <button type="button" class="checkout-btn checkout-btn--ghost" data-checkout-close>
+              Назад
+            </button>
+
+            <button type="submit" class="checkout-btn checkout-btn--primary">
+              Перейти до оплати
+            </button>
+          </div>
+        </form>
+
+        <aside class="checkout-side">
+          {% include "orders/partials/summary.html" %}
+        </aside>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .checkout-modal{
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  .checkout-modal__backdrop{
+    position: absolute;
+    inset: 0;
+    background: rgba(15,23,42,.48);
+    backdrop-filter: blur(4px);
+  }
+
+  .checkout-modal__dialog{
+    position: relative;
+    width: min(1120px, 100%);
+    max-height: min(92vh, 980px);
+    background: rgba(255,255,255,.97);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    box-shadow: var(--shadow-hover);
+    overflow: hidden;
+    animation: checkoutFade .18s ease;
+  }
+
+  @keyframes checkoutFade{
+    from{ opacity: 0; transform: translateY(10px) scale(.98); }
+    to{ opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .checkout-modal__header{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,.88);
+    backdrop-filter: blur(8px);
+  }
+
+  .checkout-modal__title{
+    margin: 0;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+
+  .checkout-modal__subtitle{
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .checkout-modal__close{
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 900;
+  }
+
+  .checkout-modal__body{
+    padding: 20px;
+    overflow: auto;
+    max-height: calc(min(92vh, 980px) - 84px);
+  }
+
+  .checkout-layout{
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, .8fr);
+    gap: 20px;
+    align-items: start;
+  }
+
+  .checkout-form{
+    display: grid;
+    gap: 16px;
+  }
+
+  .checkout-form__grid{
+    display: grid;
+    gap: 12px;
+  }
+
+  .checkout-form__grid--2{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .checkout-form input{
+    width: 100%;
+  }
+
+  .checkout-side{
+    position: sticky;
+    top: 0;
+  }
+
+  .checkout-alert{
+    padding: 12px 14px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .checkout-alert--error{
+    background: rgba(239,68,68,.08);
+    border: 1px solid rgba(239,68,68,.18);
+    color: #b91c1c;
+  }
+
+  .field-error{
+    margin-top: 6px;
+    color: #b91c1c;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .checkout-payment{
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: rgba(255,255,255,.78);
+  }
+
+  .checkout-payment__head{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .checkout-payment__head h4{
+    margin: 0;
+    font-size: 16px;
+    font-weight: 900;
+  }
+
+  .checkout-payment__head span{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(10,124,74,.08);
+    border: 1px solid rgba(10,124,74,.18);
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 900;
+  }
+
+  .checkout-payment__text{
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .checkout-actions{
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .checkout-btn{
+    height: 48px;
+    padding: 0 18px;
+    border-radius: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    transition: background .15s ease, border-color .15s ease, transform .06s ease;
+  }
+
+  .checkout-btn:active{
+    transform: translateY(1px);
+  }
+
+  .checkout-btn--ghost{
+    background: #fff;
+    border-color: var(--border);
+    color: var(--text);
+  }
+
+  .checkout-btn--ghost:hover{
+    border-color: rgba(15,23,42,.18);
+  }
+
+  .checkout-btn--primary{
+    background: var(--green);
+    color: #fff;
+    flex: 1 1 240px;
+  }
+
+  .checkout-btn--primary:hover{
+    background: var(--green-hover);
+  }
+
+  @media (max-width: 900px){
+    .checkout-layout{
+      grid-template-columns: 1fr;
+    }
+
+    .checkout-side{
+      position: static;
+    }
+  }
+
+  @media (max-width: 700px){
+    .checkout-modal{
+      padding: 0;
+      align-items: flex-end;
+    }
+
+    .checkout-modal__dialog{
+      width: 100%;
+      max-height: 95vh;
+      border-radius: 24px 24px 0 0;
+    }
+
+    .checkout-form__grid--2{
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+(function () {
+  const root = document.getElementById('modal-root');
+  const modal = document.getElementById('checkout-modal');
+
+  if (!modal) return;
+
+  function closeCheckoutModal() {
+    if (root) {
+      root.innerHTML = '';
+    } else {
+      modal.remove();
+    }
+  }
+
+  modal.addEventListener('click', function (e) {
+    if (e.target.hasAttribute('data-checkout-close')) {
+      closeCheckoutModal();
+    }
+  });
+
+  document.addEventListener('keydown', function escHandler(e) {
+    if (e.key === 'Escape') {
+      closeCheckoutModal();
+      document.removeEventListener('keydown', escHandler);
+    }
+  });
+})();
+</script>

@@ -1,0 +1,98 @@
+<div id="checkout-empty-modal" class="checkout-modal" role="dialog" aria-modal="true">
+  <div class="checkout-modal__backdrop" data-checkout-close></div>
+
+  <div class="checkout-empty-card">
+    <div class="checkout-empty-card__icon">🛒</div>
+    <h3 class="checkout-empty-card__title">Кошик порожній</h3>
+    <p class="checkout-empty-card__text">
+      Додай товари в кошик перед оформленням замовлення.
+    </p>
+
+    <button type="button" class="checkout-empty-card__btn" data-checkout-close>
+      Закрити
+    </button>
+  </div>
+</div>
+
+<style>
+  .checkout-modal{
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  .checkout-modal__backdrop{
+    position: absolute;
+    inset: 0;
+    background: rgba(15,23,42,.48);
+    backdrop-filter: blur(4px);
+  }
+
+  .checkout-empty-card{
+    position: relative;
+    width: min(460px, 100%);
+    padding: 28px 22px;
+    border-radius: 24px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.97);
+    box-shadow: var(--shadow-hover);
+    text-align: center;
+  }
+
+  .checkout-empty-card__icon{
+    font-size: 34px;
+    margin-bottom: 10px;
+  }
+
+  .checkout-empty-card__title{
+    margin: 0;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+
+  .checkout-empty-card__text{
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .checkout-empty-card__btn{
+    margin-top: 18px;
+    height: 46px;
+    padding: 0 18px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: #fff;
+    font-weight: 900;
+    cursor: pointer;
+  }
+</style>
+
+<script>
+(function () {
+  const root = document.getElementById('modal-root');
+  const modal = document.getElementById('checkout-empty-modal');
+
+  if (!modal) return;
+
+  function closeModal() {
+    if (root) {
+      root.innerHTML = '';
+    } else {
+      modal.remove();
+    }
+  }
+
+  modal.addEventListener('click', function (e) {
+    if (e.target.hasAttribute('data-checkout-close')) {
+      closeModal();
+    }
+  });
+})();
+</script>

@@ -1,0 +1,48 @@
+<div class="checkout-summary">
+
+  <div class="checkout-summary__head">
+    <h4 class="checkout-summary__title">Ваше замовлення</h4>
+    <span class="checkout-summary__count">{{ cart.total_items }} шт.</span>
+  </div>
+
+  <div class="checkout-summary__items">
+    {% for item in cart_items %}
+      <div class="checkout-summary__item">
+
+        <div class="checkout-summary__item-left">
+          <div class="checkout-summary__item-name">
+            {{ item.product.flavor }}
+          </div>
+
+          <div class="checkout-summary__item-meta">
+            {{ item.quantity }} × {{ item.price }} CZK
+          </div>
+        </div>
+
+        <div class="checkout-summary__item-right">
+          {{ item.total_price }} CZK
+        </div>
+
+      </div>
+    {% empty %}
+      <div class="checkout-summary__empty">
+        Немає товарів
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="checkout-summary__totals">
+
+    <div class="checkout-summary__row">
+      <span>Товарів</span>
+      <strong>{{ cart.total_items }}</strong>
+    </div>
+
+    <div class="checkout-summary__row checkout-summary__row--total">
+      <span>Разом</span>
+      <strong>{{ total_price }} CZK</strong>
+    </div>
+
+  </div>
+
+</div>

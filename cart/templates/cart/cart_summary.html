@@ -21,9 +21,15 @@
       Очистити кошик
     </button>
 
-    <a href="#" class="cart-summary__checkout">
-      Оформити
-    </a>
+<a
+  href="{% url 'orders:checkout' %}"
+  class="cart-summary__checkout"
+  hx-get="{% url 'orders:checkout' %}"
+  hx-target="#modal-root"
+  hx-swap="innerHTML"
+>
+  Оформити
+</a>
   </div>
 </div>
 

@@ -1,0 +1,70 @@
+<div class="payment-result">
+
+  <div class="payment-result__icon">
+    ✅
+  </div>
+
+  <h1 class="payment-result__title">
+    Оплата успішна
+  </h1>
+
+  <p class="payment-result__text">
+    Дякуємо за замовлення.
+  </p>
+
+  <div class="payment-result__order">
+    Номер замовлення:
+    <strong>#{{ order.id }}</strong>
+  </div>
+
+  <a href="{% url 'catalog:catalog' %}" class="payment-result__btn">
+    Повернутись в магазин
+  </a>
+
+</div>
+
+<style>
+
+.payment-result{
+  max-width:600px;
+  margin:120px auto;
+  text-align:center;
+  padding:40px;
+}
+
+.payment-result__icon{
+  font-size:64px;
+  margin-bottom:20px;
+}
+
+.payment-result__title{
+  font-size:32px;
+  font-weight:900;
+}
+
+.payment-result__text{
+  margin-top:10px;
+  color:#64748b;
+}
+
+.payment-result__order{
+  margin-top:20px;
+  font-size:18px;
+}
+
+.payment-result__btn{
+  display:inline-block;
+  margin-top:30px;
+  padding:14px 28px;
+  background:#0a7c4a;
+  color:white;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:700;
+}
+
+.payment-result__btn:hover{
+  background:#09613b;
+}
+
+</style>
