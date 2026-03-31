@@ -30,10 +30,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'kombucha-kombucha.shop','www.kombucha-kombucha.shop']
 CSRF_TRUSTED_ORIGINS = [
-    'http://127.0.0.1:8000',
-    'http://localhost:8000',
-    'http://kombucha-kombucha.shop',
-    'http://www.kombucha-kombucha.shop',
+    'https://127.0.0.1:8000',
+    'https://localhost:8000',
+    'https//kombucha-kombucha.shop',
+    'https://www.kombucha-kombucha.shop',
 ]
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
